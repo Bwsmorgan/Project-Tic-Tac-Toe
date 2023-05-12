@@ -90,12 +90,7 @@ class Board
     end
 
     def position_taken?(input_to_index)
-        if board[input_to_index] == 'X' ||  board[input_to_index] == 'O'
-            true
-        else
-            puts 'false'            
-            false
-        end
+        board[input_to_index] == 'X' ||  board[input_to_index] == 'O' ? true : false
     end
 
     def valid_move?(input_to_index)
@@ -117,6 +112,19 @@ class Board
             count += 1 if i == 'X' || i == 'O'
         end 
         count 
+    end
+
+
+    def winner?
+    end
+
+    def tie_game?
+    end
+
+    def game_over?
+    end
+
+    def new_game
     end
 
 
