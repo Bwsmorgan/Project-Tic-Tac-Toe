@@ -1,6 +1,6 @@
 class Board
 
-    attr_accessor :board
+    attr_accessor :board, :player1, :player2
     @@win_combinations =[
         [0,1,2],
         [3,4,5],
@@ -32,13 +32,13 @@ class Board
         @board=Array.new(9) {|i| ' '}
 
         puts "\nPlayer 1 please enter your name:"
-        player1 = gets.chomp
+        @player1 = gets.chomp
 
         puts "\n#{player1}, your game marker is 'X'\n"
         player1_marker = 'X'
 
         puts "\nPlayer 2 please enter your name:"
-        player2 = gets.chomp
+        @player2 = gets.chomp
         player2_marker = 'O'
 
         puts "\n#{player2}, your game marker is 'O'"
@@ -61,7 +61,7 @@ class Board
                 if valid_move?(input_to_index(players_choice))
                     move(input_to_index(players_choice), player_symbol)
                     switch_on = false
-                    winner
+                    puts "\n"
                     display_board
 
                 elsif position_taken?(input_to_index(players_choice))
@@ -71,6 +71,7 @@ class Board
                 end
 
             end
+            game_over? 
         end  
     end
 
@@ -118,10 +119,10 @@ class Board
     end
 
 
-    def winner
-        winner = false
-        winner = @@win_combinations.any?{|i| i.all?{|j| board[j] == 'X'}} ? true : @@win_combinations.any?{|i| i.all?{|j| board[j] == 'O'}} ? true : false
-        puts winner
+    def winner?
+        
+        @@win_combinations.any?{|i| i.all?{|j| board[j] == 'X'}} ? true : @@win_combinations.any?{|i| i.all?{|j| board[j] == 'O'}} ? true : false
+        
     end
 
     def tie_game?
@@ -132,7 +133,17 @@ class Board
     end
 
     def game_over?
-        false 
+
+        if winner?
+            puts "GAME OVER! " 
+            return true
+        elsif tie_game?
+            puts "Tie game!"
+            return true
+        else
+            return false
+        end
+ 
     end
 
     def new_game
