@@ -1,7 +1,7 @@
 class Board
 
     attr_accessor :board
-    WIN_COMBINATIONS =[
+    @@win_combinations =[
         [0,1,2],
         [3,4,5],
         [6,7,8],
@@ -51,19 +51,17 @@ class Board
             player_play = current_player.eql?(player1_marker) ? player1 : player2
             puts "\nYour turn #{player_play} please enter a value from 1 to 9"
 
-            puts turn_count
-
             player_symbol = player_play == player1 ? player1_marker : player2_marker
-            puts player_symbol
             
             switch_on = true
             while switch_on
-            #puts players_choice
+            
                 players_choice = gets.chomp
 
                 if valid_move?(input_to_index(players_choice))
                     move(input_to_index(players_choice), player_symbol)
                     switch_on = false
+                    winner
                     display_board
 
                 elsif position_taken?(input_to_index(players_choice))
@@ -113,7 +111,6 @@ class Board
     def turn_count
  
         count = 0
-
         board.each do |i|
             count += 1 if i == 'X' || i == 'O'
         end 
@@ -121,31 +118,23 @@ class Board
     end
 
 
-    def winner?
+    def winner
+        winner = false
+        winner = @@win_combinations.any?{|i| i.all?{|j| board[j] == 'X'}} ? true : @@win_combinations.any?{|i| i.all?{|j| board[j] == 'O'}} ? true : false
+        puts winner
     end
 
     def tie_game?
+         
     end
 
     def game_over?
-        false
+        false 
     end
 
     def new_game
     end
 
-
-    def fill_space
-
-        if space_is_empty?
-            move(input_to_index(string), player_symbol)
-        end
-        display_board
-    end
-
-
-
-   
 end
 
 
