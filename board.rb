@@ -23,6 +23,14 @@ class Board
         
         puts "\nWelcome to tic tac toe"
 
+        puts "\nRULES: Each player will take turns selecting a number from 1 to 9 that cooresponds with a space on the game board below. The first player to get 3 of his/her marks in a row (up, down, across, or diagonally) is the winner\n\n"
+        
+        #We display our board with numeric values that represent each spot the players can choose
+        @board=*(1..9)
+        display_board
+        #We must reset our board for game play; removes number refrences on the board
+        @board=Array.new(9) {|i| ' '}
+
         puts "\nPlayer 1 please enter your name:"
         player1 = gets.chomp
 
@@ -35,39 +43,39 @@ class Board
 
         puts "\n#{player2}, your game marker is 'O'"
 
-        puts "\nRULES: Each player will take turns selecting a number from 1 to 9 that cooresponds with a space on the game board below. The first player to get 3 of his/her marks in a row (up, down, across, or diagonally) is the winner\n\n"
         
-        #We display our board with numeric values that represent each spot the players can choose
-        @board=*(1..9)
-        display_board
-        #We must reset our board for game play; removes number refrences on the board
-        @board=Array.new(9) {|i| ' '}
         
-        #
-        player_play = current_player.eql?(player1_marker) ? player1 : player2
-        puts "\nYour turn #{player_play} please enter a value from 1 to 9"
-        
-        players_choice = gets.chomp
-        puts players_choice
+        #while game is not over
+        while !game_over?
 
-        if valid_move?(input_to_index(players_choice))
-            move(input_to_index(players_choice), player1_marker)
-            display_board
-            puts board
-        elsif position_taken?(players_choice)
-            puts "This position is taken please enter a new value"
-            players_choice = gets.chomp
-        else
-            puts "Value entered is outside of the range of 1 to 9, please try again"
-            players_choice = gets.chomps
-        end
+            player_play = current_player.eql?(player1_marker) ? player1 : player2
+            puts "\nYour turn #{player_play} please enter a value from 1 to 9"
 
+            puts turn_count
 
+            player_symbol = player_play == player1 ? player1_marker : player2_marker
+            puts player_symbol
+            
+            switch_on = true
+            while switch_on
+            #puts players_choice
+                players_choice = gets.chomp
+
+                if valid_move?(input_to_index(players_choice))
+                    move(input_to_index(players_choice), player_symbol)
+                    switch_on = false
+                    display_board
+
+                elsif position_taken?(input_to_index(players_choice))
+                    puts "This position is taken please enter a new value"
+                else
+                    puts "Value entered is outside of the range of 1 to 9, please try again"
+                end
+
+            end
+        end  
     end
 
-    
-
-   
 
     def display_board
         #We use string interpolation to draw players marks on our board
@@ -94,10 +102,8 @@ class Board
     end
 
     def valid_move?(input_to_index)
-
         #if the position we have selected is not (!) taken & that position exists on the board then our move is valid
-        !(position_taken?(input_to_index))&& @board[input_to_index] ? true : false
-
+        input_to_index.between?(0,9) && !(position_taken?(input_to_index))&& @board[input_to_index] ? true : false
     end
 
     def current_player
@@ -122,6 +128,7 @@ class Board
     end
 
     def game_over?
+        false
     end
 
     def new_game
