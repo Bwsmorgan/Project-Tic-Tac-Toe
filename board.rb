@@ -125,6 +125,9 @@ class Board
     end
 
     def tie_game?
+
+        #if all indexes in board are not empty string but either 'X' and 'O' it means the game is over and there is a tie
+        board.all?{|i| i == 'X' || i == 'O'}
          
     end
 
