@@ -40,15 +40,28 @@ class Board
         #We display our board with numeric values that represent each spot the players can choose
         @board=*(1..9)
         display_board
-        #We must reset our board for game play
+        #We must reset our board for game play; removes number refrences on the board
         @board=Array.new(9) {|i| ' '}
         
+        #
         player_play = current_player.eql?(player1_marker) ? player1 : player2
         puts "\nYour turn #{player_play} please enter a value from 1 to 9"
         
         players_choice = gets.chomp
+        puts players_choice
 
-        move(input_to_index(player1_choice), player1_marker)
+        if valid_move?(input_to_index(players_choice))
+            move(input_to_index(players_choice), player1_marker)
+            display_board
+            puts board
+        elsif position_taken?(players_choice)
+            puts "This position is taken please enter a new value"
+            players_choice = gets.chomp
+        else
+            puts "Value entered is outside of the range of 1 to 9, please try again"
+            players_choice = gets.chomps
+        end
+
 
     end
 
@@ -73,13 +86,14 @@ class Board
     end
 
     def move(input_to_index, player_symbol)
-        @board[input_to_index] = player_symbol
+        board[input_to_index] = player_symbol
     end
 
     def position_taken?(input_to_index)
-        if @board[input_to_index] == 'X' ||  @board[input_to_index] == 'O'
+        if board[input_to_index] == 'X' ||  board[input_to_index] == 'O'
             true
         else
+            puts 'false'            
             false
         end
     end
@@ -87,20 +101,19 @@ class Board
     def valid_move?(input_to_index)
 
         #if the position we have selected is not (!) taken & that position exists on the board then our move is valid
-        !position_taken(input_to_index) && @board[input_to_index] ? true : false
+        !(position_taken?(input_to_index))&& @board[input_to_index] ? true : false
 
     end
 
     def current_player
-
         turn_count % 2 == 0 ? 'O' : 'X'
-
     end
     
     def turn_count
  
         count = 0
-        @board.each do |i|
+
+        board.each do |i|
             count += 1 if i == 'X' || i == 'O'
         end 
         count 
