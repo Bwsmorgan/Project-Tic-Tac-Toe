@@ -19,6 +19,101 @@ class Board
 
     end
 
+
+    def display_board
+        #We use string interpolation to draw players marks on our board
+        puts " #{board[0]} | #{board[1]} | #{board[2]}"
+        puts "-----------"
+        puts " #{board[3]} | #{board[4]} | #{board[5]}"
+        puts "-----------"
+        puts " #{board[6]} | #{board[7]} | #{board[8]}"
+
+    end 
+
+
+    def input_to_index(string)
+        #since players will view each space on our board from 1-9 we must subtract 1 since we are referencing an index from 0 to 8
+        @choice = (string.to_i)-1 
+    end
+
+
+    def move(input_to_index, player_symbol)
+        board[input_to_index] = player_symbol
+    end
+
+
+    def position_taken?(input_to_index)
+        board[input_to_index] == 'X' ||  board[input_to_index] == 'O' ? true : false
+    end
+
+
+    def valid_move?(input_to_index)
+        #if the position we have selected is not (!) taken & that position exists on the board then our move is valid
+        input_to_index.between?(0,9) && !(position_taken?(input_to_index))&& @board[input_to_index] ? true : false
+    end
+
+
+    def current_player
+        turn_count % 2 == 0 ? 'O' : 'X'
+    end
+    
+
+    def turn_count
+ 
+        count = 0
+        board.each do |i|
+            count += 1 if i == 'X' || i == 'O'
+        end 
+        count 
+    end
+
+
+    def winner?
+        
+        @@win_combinations.any?{|i| i.all?{|j| board[j] == 'X'}} ? true : @@win_combinations.any?{|i| i.all?{|j| board[j] == 'O'}} ? true : false
+
+        
+    end
+
+
+    def tie_game?
+
+        #if all indexes in board are not empty string but either 'X' and 'O' it means the game is over and there is a tie
+        board.all?{|i| i == 'X' || i == 'O'}
+         
+    end
+
+
+    def game_over?
+
+        if winner?
+            puts "\nGame over!" 
+            new_game
+            return true
+        elsif tie_game?
+            puts "\nTie game!"
+            new_game
+            return true
+        else
+            return false
+        end
+    end
+
+
+    def new_game
+
+        puts "\nWould you like to play again?: y/n"
+        user_entry = gets.chomp
+
+        if user_entry == 'y'
+            new_game = Board.new
+            new_game.play
+        else
+            nil
+        end
+    end
+
+
     def play 
         
         puts "\nWelcome to tic tac toe"
@@ -43,9 +138,7 @@ class Board
 
         puts "\n#{player2}, your game marker is 'O'"
 
-        
-        
-        #while game is not over
+        #while game is not over; game over will evaluate each time while loop is run
         while !game_over?
 
             player_play = current_player.eql?(player1_marker) ? player1 : player2
@@ -69,88 +162,11 @@ class Board
                 else
                     puts "Value entered is outside of the range of 1 to 9, please try again"
                 end
-
-            end
-            game_over? 
+            end    
         end  
     end
 
-
-    def display_board
-        #We use string interpolation to draw players marks on our board
-        puts " #{board[0]} | #{board[1]} | #{board[2]}"
-        puts "-----------"
-        puts " #{board[3]} | #{board[4]} | #{board[5]}"
-        puts "-----------"
-        puts " #{board[6]} | #{board[7]} | #{board[8]}"
-
-    end 
-
-    def input_to_index(string)
-
-        @choice = (string.to_i)-1 
-    #since players will view each space on our board from 1-9 we must subtract 1 since we are referencing an index from 0 to 8
-    end
-
-    def move(input_to_index, player_symbol)
-        board[input_to_index] = player_symbol
-    end
-
-    def position_taken?(input_to_index)
-        board[input_to_index] == 'X' ||  board[input_to_index] == 'O' ? true : false
-    end
-
-    def valid_move?(input_to_index)
-        #if the position we have selected is not (!) taken & that position exists on the board then our move is valid
-        input_to_index.between?(0,9) && !(position_taken?(input_to_index))&& @board[input_to_index] ? true : false
-    end
-
-    def current_player
-        turn_count % 2 == 0 ? 'O' : 'X'
-    end
-    
-    def turn_count
- 
-        count = 0
-        board.each do |i|
-            count += 1 if i == 'X' || i == 'O'
-        end 
-        count 
-    end
-
-
-    def winner?
-        
-        @@win_combinations.any?{|i| i.all?{|j| board[j] == 'X'}} ? true : @@win_combinations.any?{|i| i.all?{|j| board[j] == 'O'}} ? true : false
-        
-    end
-
-    def tie_game?
-
-        #if all indexes in board are not empty string but either 'X' and 'O' it means the game is over and there is a tie
-        board.all?{|i| i == 'X' || i == 'O'}
-         
-    end
-
-    def game_over?
-
-        if winner?
-            puts "GAME OVER! " 
-            return true
-        elsif tie_game?
-            puts "Tie game!"
-            return true
-        else
-            return false
-        end
- 
-    end
-
-    def new_game
-    end
-
 end
-
 
 
 game_1 = Board.new
